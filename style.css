@@ -1,4 +1,4 @@
-/* CSS Variables */
+/* CSS Variables & Theming */
 :root {
     --bg-dark: #161616;
     --bg-card: #222222;
@@ -6,7 +6,24 @@
     --accent-orange: #fd6f00;
     --text-white: #ffffff;
     --text-muted: #9b9b9b;
+    --border-color: rgba(255, 255, 255, 0.05);
+    --border-color-strong: rgba(255, 255, 255, 0.1);
     --font-main: 'Poppins', sans-serif;
+    --header-bg: rgba(22, 22, 22, 0.95);
+    --modal-bg: rgba(0, 0, 0, 0.8);
+}
+
+/* Light Mode Overrides */
+body.light-mode {
+    --bg-dark: #f5f7fa;
+    --bg-card: #ffffff;
+    --bg-alt: #e9ecef;
+    --text-white: #111111; 
+    --text-muted: #555555;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-color-strong: rgba(0, 0, 0, 0.15);
+    --header-bg: rgba(255, 255, 255, 0.95);
+    --modal-bg: rgba(255, 255, 255, 0.4);
 }
 
 /* Reset & Base Styles */
@@ -26,6 +43,7 @@ body {
     color: var(--text-white);
     line-height: 1.6;
     overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease; /* Smooth Theme Transitions */
 }
 
 /* --- Navigation Bar --- */
@@ -38,10 +56,11 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 8%;
-    background-color: rgba(22, 22, 22, 0.95);
+    background-color: var(--header-bg);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .logo {
@@ -49,6 +68,12 @@ header {
     font-weight: 700;
     color: var(--accent-orange);
     text-decoration: none;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 nav ul {
@@ -61,12 +86,23 @@ nav a {
     text-decoration: none;
     color: var(--text-muted);
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 500;
     transition: color 0.3s ease;
 }
 
 nav a:hover, nav a.active {
     color: var(--accent-orange);
+}
+
+/* Theme Toggle Button */
+.theme-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    padding: 0;
 }
 
 /* Mobile 3-Dot Menu Icon */
@@ -101,7 +137,7 @@ nav a:hover, nav a.active {
 
 .btn-primary {
     background-color: var(--accent-orange);
-    color: var(--text-white);
+    color: #ffffff; /* Forces white text on primary button regardless of theme */
     border: 2px solid var(--accent-orange);
 }
 
@@ -117,7 +153,8 @@ nav a:hover, nav a.active {
 }
 
 .btn-secondary:hover {
-    border-color: var(--text-white);
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
 }
 
 .w-100 {
@@ -180,8 +217,12 @@ nav a:hover, nav a.active {
 .social-links a img {
     width: 20px;
     height: 20px;
-    filter: brightness(0) invert(0.6); /* Makes icons gray */
+    filter: brightness(0) invert(0.6); 
     transition: all 0.3s ease;
+}
+
+body.light-mode .social-links a img {
+    filter: brightness(0) opacity(0.6); /* Adjusts for light mode */
 }
 
 .social-links a:hover {
@@ -189,7 +230,7 @@ nav a:hover, nav a.active {
 }
 
 .social-links a:hover img {
-    filter: brightness(0) saturate(100%) invert(51%) sepia(85%) saturate(2256%) hue-rotate(1deg) brightness(104%) contrast(106%); /* Orange filter approximation */
+    filter: brightness(0) saturate(100%) invert(51%) sepia(85%) saturate(2256%) hue-rotate(1deg) brightness(104%) contrast(106%); 
 }
 
 /* Call to Action */
@@ -206,13 +247,14 @@ nav a:hover, nav a.active {
     padding: 1.5rem 2rem;
     border-radius: 8px;
     gap: 2rem;
+    transition: background-color 0.4s ease;
 }
 
 .stat-item {
     display: flex;
     flex-direction: column;
     padding-right: 2rem;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid var(--border-color-strong);
 }
 
 .stat-item:last-child {
@@ -249,21 +291,18 @@ nav a:hover, nav a.active {
     justify-content: center;
     align-items: center;
     animation: glowPulse 3s infinite alternate; 
-    
-    /* NEW: Required for smooth hovering and z-index */
     position: relative;
     z-index: 1;
     transition: all 0.4s ease;
     cursor: pointer;
 }
 
-/* NEW: The Hover Effect */
 .image-circle:hover {
-    z-index: 10;                              /* Brings it strictly to the front */
-    transform: scale(1.05);                   /* Makes it pop out towards the user */
-    border: 6px solid var(--accent-orange);   /* Thicker border on hover */
-    box-shadow: 0 0 40px var(--accent-orange); /* Locks in a bright, solid glow */
-    animation-play-state: paused;             /* Pauses the pulsing animation */
+    z-index: 10;                              
+    transform: scale(1.05);                   
+    border: 6px solid var(--accent-orange);   
+    box-shadow: 0 0 40px var(--accent-orange); 
+    animation-play-state: paused;             
 }
 
 .image-circle img {
@@ -272,15 +311,13 @@ nav a:hover, nav a.active {
     object-fit: cover;
     object-position: center 20%; 
     filter: grayscale(100%) contrast(110%);
-    transition: all 0.5s ease;                /* Smooth transition for the color reveal */
+    transition: all 0.5s ease;                
 }
 
-/* NEW: Reveal full color when hovered */
 .image-circle:hover img {
     filter: grayscale(0%) contrast(100%);
 }
 
-/* --- The Glow Animation Logic --- */
 @keyframes glowPulse {
     0% {
         box-shadow: 0 0 15px rgba(253, 111, 0, 0.4), 
@@ -296,6 +333,7 @@ nav a:hover, nav a.active {
 /* --- Reusable Sections --- */
 .section {
     padding: 6rem 8%;
+    transition: background-color 0.4s ease;
 }
 
 .bg-alt {
@@ -336,7 +374,7 @@ nav a:hover, nav a.active {
     color: var(--accent-orange);
 }
 
-/* --- Skills Section (Upgraded to Cards) --- */
+/* --- Skills Section --- */
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -346,24 +384,22 @@ nav a:hover, nav a.active {
 }
 
 .skill-card {
-    background-color: var(--bg-dark); /* Makes it pop against the slightly lighter section background */
+    background-color: var(--bg-card); 
     padding: 2.5rem 2rem;
     border-radius: 10px;
     text-align: center;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
 }
 
-/* Hover effect: lifts the card and adds a glow */
 .skill-card:hover {
     transform: translateY(-10px);
     border-color: var(--accent-orange);
     box-shadow: 0 10px 30px rgba(253, 111, 0, 0.1);
 }
 
-/* The expanding orange line at the top on hover */
 .skill-card::before {
     content: "";
     position: absolute;
@@ -388,7 +424,6 @@ nav a:hover, nav a.active {
     transition: transform 0.4s ease;
 }
 
-/* Make the icon bounce slightly on hover */
 .skill-card:hover .skill-icon {
     transform: scale(1.1);
 }
@@ -405,145 +440,67 @@ nav a:hover, nav a.active {
     line-height: 1.6;
 }
 
-/* --- Upgraded Projects Section --- */
-.projects-grid {
+/* --- New Cyber Security Cards Section --- */
+.security-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2.5rem;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.project-card {
+.security-card {
     background-color: var(--bg-card);
+    padding: 2.5rem 2rem;
     border-radius: 12px;
-    overflow: hidden; /* Keeps the image inside the rounded corners */
-    border: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+    border: 1px solid var(--border-color);
     transition: all 0.4s ease;
+    position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
-.project-card:hover {
+/* 🟢 Glow Effect added to Security Cards */
+.security-card:hover {
     transform: translateY(-8px);
     border-color: var(--accent-orange);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* Image & Hover Overlay */
-.project-image {
-    width: 100%;
-    height: 220px;
-    position: relative;
-    overflow: hidden;
-}
-
-.project-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.project-card:hover .project-image img {
-    transform: scale(1.1); /* Slight zoom on hover */
-}
-
-/* The dark overlay that appears on hover */
-.project-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(22, 22, 22, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    opacity: 0;
-    transition: all 0.4s ease;
-}
-
-.project-card:hover .project-overlay {
-    opacity: 1;
-}
-
-/* Small buttons for inside the cards */
-.btn-sm {
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Project Text Info */
-.project-info {
-    padding: 1.8rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.project-info h3 {
-    color: var(--text-white);
-    margin-bottom: 0.8rem;
-    font-size: 1.4rem;
-}
-
-.project-info p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    flex: 1; /* Pushes the tags to the bottom */
-}
-
-/* Technology Tags */
-.project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-}
-
-.project-tags span {
-    background-color: var(--bg-dark);
-    color: var(--accent-orange);
-    font-size: 0.8rem;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    border: 1px solid rgba(253, 111, 0, 0.2);
-    font-weight: 500;
-}
-
-/* --- Security Section --- */
-.security-content {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-    background-color: var(--bg-card);
-    padding: 3rem;
-    border-radius: 10px;
-    border-left: 4px solid var(--accent-orange);
+    box-shadow: 0 0 20px rgba(253, 111, 0, 0.4), 
+                0 0 40px rgba(253, 111, 0, 0.1);
 }
 
 .security-icon {
     font-size: 3rem;
-    margin-bottom: 1rem;
+    color: var(--accent-orange);
+    margin-bottom: 1.2rem;
+    transition: transform 0.4s ease;
 }
 
-.security-content p {
-    color: var(--text-muted);
+.security-card:hover .security-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.security-card h3 {
+    color: var(--text-white);
     margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.security-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
 }
 
 /* --- Footer --- */
 footer {
-    background-color: #111;
+    background-color: var(--bg-alt);
     padding: 4rem 8% 2rem;
     text-align: center;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid var(--border-color);
+    transition: background-color 0.4s ease;
 }
 
 .footer-content h3 {
@@ -563,7 +520,7 @@ footer {
 }
 
 .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid var(--border-color-strong);
     padding-top: 1.5rem;
     color: var(--text-muted);
     font-size: 0.9rem;
@@ -577,7 +534,7 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--modal-bg);
     backdrop-filter: blur(5px);
     z-index: 2000;
     justify-content: center;
@@ -592,7 +549,7 @@ footer {
     max-width: 500px;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--border-color-strong);
 }
 
 .close-btn {
@@ -638,9 +595,10 @@ footer {
     padding: 0.8rem;
     border-radius: 5px;
     background-color: var(--bg-dark);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--border-color-strong);
     color: var(--text-white);
     font-family: var(--font-main);
+    transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
 }
 
 .input-group input:focus, 
@@ -649,8 +607,7 @@ footer {
     border-color: var(--accent-orange);
 }
 
-
-/* --- Responsive Design --- */
+/* --- Responsive Design (Mobile Friendly) --- */
 @media (max-width: 1024px) {
     .title { font-size: 2.8rem; }
     .image-circle { width: 300px; height: 300px; }
@@ -668,6 +625,7 @@ footer {
         display: none; /* Hide header hire button on mobile */
     }
 
+    /* Mobile Nav Layout */
     nav {
         position: absolute;
         top: 100%;
@@ -678,7 +636,7 @@ footer {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.4s ease;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid var(--border-color);
     }
 
     nav.active {
@@ -700,7 +658,7 @@ footer {
 
     .stat-item {
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--border-color-strong);
         padding-right: 0;
         padding-bottom: 1.5rem;
     }
@@ -710,6 +668,7 @@ footer {
         padding-bottom: 0;
     }
 }
+
 /* --- Typing Animation Cursor --- */
 .cursor {
     color: var(--accent-orange);
